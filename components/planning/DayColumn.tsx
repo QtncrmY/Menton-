@@ -3,7 +3,7 @@
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Plus, Baby } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { DraggableActivity } from './DraggableActivity'
 import type { Day, Activity } from '@/types'
 
@@ -33,55 +33,75 @@ export function DayColumn({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2 px-1">
-        <span className="text-2xl">{day.emoji}</span>
-        <div className="flex-1">
-          <h2 className="font-display text-xl text-gray-900">{day.label}</h2>
-          {day.description && (
-            <p className="text-sm text-gray-500">{day.description}</p>
-          )}
+      {/* Day header */}
+      <div className="flex items-start gap-3 px-1">
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
+          style={{ background: 'rgba(0,119,182,0.08)' }}
+        >
+          {day.emoji}
         </div>
-        <div className="flex gap-1.5">
-          {day.is_arrival && (
-            <span className="text-xs bg-azure-100 text-azure-700 px-2 py-0.5 rounded-full font-medium">✈️ Arrivée</span>
+        <div className="flex-1">
+          <h2 className="font-display text-xl font-semibold leading-tight" style={{ color: '#1A1A2E' }}>
+            {day.label}
+          </h2>
+          {day.description && (
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(26,26,46,0.5)' }}>{day.description}</p>
           )}
-          {day.is_departure && (
-            <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">👋 Départ</span>
-          )}
-          {allBabyFriendly && (
-            <span className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-              <Baby size={11} /> Tout bébé
-            </span>
-          )}
+          <div className="flex gap-1.5 mt-1.5 flex-wrap">
+            {day.is_arrival && (
+              <span
+                className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                style={{ background: 'rgba(0,119,182,0.1)', color: '#0077B6' }}
+              >
+                ✈️ Arrivée
+              </span>
+            )}
+            {day.is_departure && (
+              <span
+                className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                style={{ background: 'rgba(231,111,81,0.1)', color: '#E76F51' }}
+              >
+                👋 Départ
+              </span>
+            )}
+            {allBabyFriendly && (
+              <span
+                className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                style={{ background: 'rgba(244,211,63,0.15)', color: '#8a6d00' }}
+              >
+                🍼 Tout bébé
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
-      <SortableContext
-        items={activities.map(a => a.id)}
-        strategy={verticalListSortingStrategy}
-      >
+      {/* Sortable list */}
+      <SortableContext items={activities.map(a => a.id)} strategy={verticalListSortingStrategy}>
         <div
           ref={setNodeRef}
-          className={`space-y-2 min-h-[80px] rounded-xl transition-colors duration-150 ${
-            isOver ? 'bg-azure-50 ring-2 ring-azure-200' : ''
-          }`}
+          className="space-y-2 min-h-[80px] rounded-xl transition-colors duration-150 p-1"
+          style={isOver ? { background: 'rgba(0,119,182,0.05)', outline: '2px dashed rgba(0,119,182,0.2)' } : {}}
         >
           <AnimatePresence mode="popLayout">
             {activities.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-8 text-gray-400"
+                className="flex flex-col items-center justify-center py-10 text-center"
+                style={{ color: 'rgba(26,26,46,0.3)' }}
               >
-                <span className="text-3xl mb-2">📋</span>
+                <span className="text-4xl mb-2 opacity-40">📋</span>
                 <p className="text-sm">Aucune activité planifiée</p>
+                <p className="text-xs mt-1 opacity-70">Tap le + pour en ajouter une</p>
               </motion.div>
             ) : (
               activities.map((activity, index) => (
                 <motion.div
                   key={activity.id}
                   layout
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 16, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.2 } }}
                   exit={{ opacity: 0, x: -20, transition: { duration: 0.15 } }}
                 >
@@ -102,12 +122,27 @@ export function DayColumn({
         </div>
       </SortableContext>
 
+      {/* Add button */}
       <button
         onClick={() => onAddActivity(day.id)}
-        className="w-full h-12 rounded-xl border-2 border-dashed border-azure-200 text-azure-500 font-medium text-sm flex items-center justify-center gap-2 active:scale-95 transition-all hover:border-azure-300 hover:bg-azure-50"
+        className="w-full h-13 rounded-card flex items-center justify-center gap-2 transition-all active:scale-[0.98] font-medium text-sm"
+        style={{
+          border: '2px dashed rgba(0,119,182,0.3)',
+          color: '#0077B6',
+          background: 'transparent',
+          height: '52px',
+        }}
+        onMouseOver={e => {
+          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,119,182,0.05)'
+          ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,119,182,0.6)'
+        }}
+        onMouseOut={e => {
+          (e.currentTarget as HTMLButtonElement).style.background = 'transparent'
+          ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,119,182,0.3)'
+        }}
       >
         <Plus size={16} />
-        Ajouter une activité
+        <span className="text-xs font-semibold uppercase tracking-wider">Ajouter une activité</span>
       </button>
     </div>
   )

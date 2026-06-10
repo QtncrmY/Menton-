@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { WaveBackground } from '@/components/WaveBackground'
 import { QuizGame } from '@/components/games/QuizGame'
 import { MostLikelyTo } from '@/components/games/MostLikelyTo'
 import { TwoTruthsOneLie } from '@/components/games/TwoTruthsOneLie'
@@ -15,41 +15,41 @@ const GAMES = [
     id: 'quiz' as GameView,
     emoji: '🧠',
     title: 'Quiz Côte d\'Azur',
-    description: '10 questions sur Menton, Monaco, Nice et la gastronomie locale. Qui sera le champion ?',
-    tags: ['2-6 joueurs', '10 questions', '15s/question'],
-    tagColors: ['bg-azure-100 text-azure-700', 'bg-purple-100 text-purple-700', 'bg-yellow-100 text-yellow-700'],
+    description: '10 questions sur Menton, Monaco, Nice et la gastronomie locale.',
+    tags: ['2-6 joueurs', '10 questions'],
+    accent: '#0077B6',
   },
   {
     id: 'mostlikely' as GameView,
     emoji: '👆',
     title: 'Qui dans le groupe ?',
-    description: 'Une question, tout le monde vote. Qui est le plus susceptible de… ? Hilarant et révélateur !',
-    tags: ['4 joueurs', '10 rounds', 'Sans timer'],
-    tagColors: ['bg-pink-100 text-pink-700', 'bg-emerald-100 text-emerald-700', 'bg-orange-100 text-orange-700'],
+    description: 'Une question, tout le groupe vote. Qui est le plus susceptible de… ?',
+    tags: ['4 joueurs', '10 rounds'],
+    accent: '#E76F51',
   },
   {
     id: 'twotruths' as GameView,
     emoji: '🤥',
     title: '2 vérités, 1 mensonge',
-    description: 'Chacun écrit 2 vérités et 1 mensonge. Le groupe doit trouver lequel est faux. Qui trompe le mieux ?',
-    tags: ['4 joueurs', 'Tour par tour', 'Bluff'],
-    tagColors: ['bg-red-100 text-red-700', 'bg-blue-100 text-blue-700', 'bg-gray-100 text-gray-600'],
-  },
-  {
-    id: 'bingo' as GameView,
-    emoji: '🎯',
-    title: 'Bingo de Menton',
-    description: '16 cases à cocher pendant le séjour. Socca, Monaco, selfie de groupe, sieste à la plage… Faites Bingo !',
-    tags: ['Tout le voyage', '4×4 grille', 'Persistant'],
-    tagColors: ['bg-citron-100 text-citron-600', 'bg-azure-100 text-azure-700', 'bg-sand-200 text-sand-700'],
+    description: 'Chacun écrit ses affirmations. Le groupe doit trouver le mensonge.',
+    tags: ['4 joueurs', 'Bluff'],
+    accent: '#7B2D8B',
   },
   {
     id: 'wouldyourather' as GameView,
     emoji: '🤔',
     title: 'Tu préfères…',
-    description: '25 dilemmes à trancher en groupe. Chacun vote en secret, puis on révèle comment le groupe a voté !',
-    tags: ['4 joueurs', '25 questions', 'Vote secret'],
-    tagColors: ['bg-orange-100 text-orange-700', 'bg-azure-100 text-azure-700', 'bg-pink-100 text-pink-700'],
+    description: '25 dilemmes à trancher en groupe. Vote secret, résultats révélés.',
+    tags: ['4 joueurs', '25 questions'],
+    accent: '#F4A261',
+  },
+  {
+    id: 'bingo' as GameView,
+    emoji: '🎯',
+    title: 'Bingo de Menton',
+    description: '16 cases à cocher pendant le séjour. Socca, Monaco, selfie…',
+    tags: ['Tout le voyage', '4×4 grille'],
+    accent: '#2D8B4A',
   },
 ]
 
@@ -64,26 +64,60 @@ export default function GamesPage() {
 
   return (
     <div className="pb-28">
-      <PageHeader title="🎮 Jeux" subtitle="Pour animer les soirées" />
+      {/* Dark header */}
+      <header className="relative overflow-hidden px-4 py-5" style={{ background: 'linear-gradient(135deg, #1A1A2E 0%, #16213E 100%)' }}>
+        <WaveBackground />
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Soirées & animations
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-white">🎮 Jeux</h1>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>5 jeux pour animer les soirées</p>
+        </div>
+      </header>
 
       <div className="px-4 pt-4 space-y-3">
-        <p className="text-sm text-gray-500 mb-1">4 jeux pour égayer les soirées à Menton !</p>
-
         {GAMES.map(game => (
           <button
             key={game.id}
             onClick={() => setView(game.id)}
-            className="w-full bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-left active:scale-[0.98] transition-transform"
+            className="w-full bg-white text-left active:scale-[0.98] transition-transform"
+            style={{
+              borderRadius: '16px',
+              boxShadow: '0 2px 8px rgba(0,119,182,0.08)',
+              borderLeft: `4px solid ${game.accent}`,
+              borderBottom: `3px solid ${game.accent}20`,
+            }}
           >
-            <div className="text-4xl mb-3">{game.emoji}</div>
-            <h3 className="font-semibold text-gray-900 text-lg mb-1">{game.title}</h3>
-            <p className="text-sm text-gray-500 mb-3 leading-snug">{game.description}</p>
-            <div className="flex gap-2 flex-wrap">
-              {game.tags.map((tag, i) => (
-                <span key={tag} className={`text-xs px-2 py-1 rounded-full font-medium ${game.tagColors[i]}`}>
-                  {tag}
-                </span>
-              ))}
+            <div className="p-4">
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                  style={{ background: `${game.accent}12` }}
+                >
+                  {game.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-base leading-tight mb-1" style={{ color: '#1A1A2E' }}>
+                    {game.title}
+                  </h3>
+                  <p className="text-xs leading-snug mb-2" style={{ color: 'rgba(26,26,46,0.5)' }}>
+                    {game.description}
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    {game.tags.map(tag => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                        style={{ background: `${game.accent}12`, color: game.accent }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ color: game.accent, opacity: 0.4, fontSize: '18px', marginTop: '2px' }}>›</div>
+              </div>
             </div>
           </button>
         ))}

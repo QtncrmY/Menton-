@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { Home, Calendar, MapPin, Gamepad2, UtensilsCrossed, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -18,38 +19,43 @@ export default function TabsLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-sand-50">
-      <main className="pb-20">
+    <div className="min-h-screen bg-warm">
+      <main className="pb-[88px]">
         {children}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-100 pb-safe">
-        <div className="flex items-center justify-around h-16">
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-50 pb-safe"
+        style={{ background: 'rgba(26,26,46,0.96)', backdropFilter: 'blur(20px)' }}
+      >
+        <div className="flex items-center justify-around px-1" style={{ height: '68px' }}>
           {tabs.map(({ id, icon: Icon, label, href }) => {
             const isActive = pathname === href || pathname.startsWith(href + '/')
             return (
               <Link
                 key={id}
                 href={href}
-                className={cn(
-                  'flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-2 py-1 rounded-xl transition-all duration-150',
-                  isActive ? 'text-azure-500' : 'text-gray-400 active:scale-95'
-                )}
+                className="relative flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-2 py-1 touch-feedback"
                 aria-label={label}
               >
                 <Icon
                   size={22}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                  className={cn(isActive && 'text-azure-500')}
+                  strokeWidth={isActive ? 2 : 1.5}
+                  color={isActive ? '#F4D03F' : 'rgba(255,255,255,0.5)'}
                 />
-                <span className={cn(
-                  'text-[10px] font-medium leading-none',
-                  isActive ? 'text-azure-500' : 'text-gray-400'
-                )}>
+                <span
+                  className="text-[10px] font-medium leading-none"
+                  style={{ color: isActive ? '#F4D03F' : 'rgba(255,255,255,0.5)' }}
+                >
                   {label}
                 </span>
                 {isActive && (
-                  <div className="absolute bottom-1 w-1 h-1 rounded-full bg-citron-400" />
+                  <motion.div
+                    layoutId="nav-indicator"
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
+                    style={{ background: '#F4D03F' }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
                 )}
               </Link>
             )
