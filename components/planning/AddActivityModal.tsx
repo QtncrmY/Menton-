@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Plus } from 'lucide-react'
-import { ACTIVITIES_LIBRARY, CATEGORY_LABELS, CATEGORY_STYLES } from '@/data/activities-library'
+import { ACTIVITIES_LIBRARY, CATEGORY_LABELS } from '@/data/activities-library'
 import type { Activity, ActivityTemplate, Category, NewActivity } from '@/types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -18,17 +18,19 @@ const CATEGORY_FILTERS = [
   { key: 'shopping', label: '🛍️ Shopping' },
 ]
 
-const EMOJI_PICKER = ['🏖️', '🍽️', '🏛️', '🚗', '⚡', '🎮', '🥂', '📍', '🌅', '🍋']
+const CATEGORY_ACCENT: Record<string, string> = {
+  plage: '#0077B6', restaurant: '#E76F51', visite: '#7B2D8B',
+  day_trip: '#2D8B4A', soiree: '#1A1A2E', sport: '#E76F51',
+  shopping: '#F4A261', libre: '#90E0EF', transport: '#6B7280',
+}
+
+const EMOJI_PICKER = ['🏖️', '🍽️', '🏛️', '🚗', '⚡', '🎮', '🥂', '📍', '🌅', '🍋', '🎨', '🛥️']
 
 const TIME_SLOTS = ['Matin', 'Après-midi', 'Soirée', 'Journée', 'Matin-Après-midi', 'Fin d\'après-midi']
 
 const DURATIONS = [
-  { label: '30 min', value: 30 },
-  { label: '1h', value: 60 },
-  { label: '1h30', value: 90 },
-  { label: '2h', value: 120 },
-  { label: '3h', value: 180 },
-  { label: 'Demi-journée', value: 240 },
+  { label: '30 min', value: 30 }, { label: '1h', value: 60 }, { label: '1h30', value: 90 },
+  { label: '2h', value: 120 }, { label: '3h', value: 180 }, { label: 'Demi-journée', value: 240 },
   { label: 'Journée', value: 480 },
 ]
 
@@ -62,58 +64,24 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
   })
 
   function addFromLibrary(template: ActivityTemplate) {
-    const activity: NewActivity = {
-      title: template.title,
-      description: template.description,
-      emoji: template.emoji,
-      category: template.category,
-      time_slot: template.suggested_time_slot,
-      duration_minutes: template.duration_minutes,
-      location_name: template.location_name,
-      location_url: template.location_url,
-      is_baby_friendly: template.is_baby_friendly,
-      notes: '',
-      sort_order: 0,
-      created_by: 'group',
-      day_id: dayId,
-    }
-    onAdd(dayId, activity)
+    onAdd(dayId, {
+      title: template.title, description: template.description, emoji: template.emoji,
+      category: template.category, time_slot: template.suggested_time_slot,
+      duration_minutes: template.duration_minutes, location_name: template.location_name,
+      location_url: template.location_url, is_baby_friendly: template.is_baby_friendly,
+      notes: '', sort_order: 0, created_by: 'group', day_id: dayId,
+    })
     toast.success('Activité ajoutée ✓')
     onClose()
   }
 
   function handleCustomSubmit() {
-    if (!title.trim()) {
-      toast.error('Le titre est obligatoire')
-      return
-    }
-
+    if (!title.trim()) { toast.error('Le titre est obligatoire'); return }
     if (editActivity && onUpdate) {
-      onUpdate({
-        ...editActivity,
-        title: title.trim(),
-        emoji,
-        category,
-        time_slot: timeSlot || undefined,
-        duration_minutes: duration,
-        notes: notes || undefined,
-        is_baby_friendly: isBabyFriendly,
-      })
+      onUpdate({ ...editActivity, title: title.trim(), emoji, category, time_slot: timeSlot || undefined, duration_minutes: duration, notes: notes || undefined, is_baby_friendly: isBabyFriendly })
       toast.success('Activité modifiée ✓')
     } else {
-      const activity: NewActivity = {
-        title: title.trim(),
-        emoji,
-        category,
-        time_slot: timeSlot || undefined,
-        duration_minutes: duration,
-        notes: notes || undefined,
-        is_baby_friendly: isBabyFriendly,
-        sort_order: 0,
-        created_by: 'group',
-        day_id: dayId,
-      }
-      onAdd(dayId, activity)
+      onAdd(dayId, { title: title.trim(), emoji, category, time_slot: timeSlot || undefined, duration_minutes: duration, notes: notes || undefined, is_baby_friendly: isBabyFriendly, sort_order: 0, created_by: 'group', day_id: dayId })
       toast.success('Activité ajoutée ✓')
     }
     onClose()
@@ -122,137 +90,162 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-end"
+        className="fixed inset-0 z-[100] flex items-end"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+        <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
         <motion.div
-          className="relative w-full bg-white rounded-t-3xl max-h-[90vh] flex flex-col"
+          className="relative w-full bg-white flex flex-col"
+          style={{ maxHeight: '85dvh', borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
           initial={{ y: '100%' }}
           animate={{ y: 0, transition: { type: 'spring', damping: 30, stiffness: 300 } }}
           exit={{ y: '100%', transition: { duration: 0.2 } }}
         >
-          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
-            <h2 className="font-semibold text-gray-900">
+          {/* Handle */}
+          <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+            <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(26,26,46,0.15)' }} />
+          </div>
+
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid rgba(0,119,182,0.08)' }}>
+            <h2 className="font-display text-xl font-semibold" style={{ color: '#1A1A2E' }}>
               {editActivity ? 'Modifier l\'activité' : 'Ajouter une activité'}
             </h2>
-            <button onClick={onClose} aria-label="Fermer" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100">
-              <X size={16} />
+            <button
+              onClick={onClose}
+              aria-label="Fermer"
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+              style={{ background: '#F0F4F8', color: '#1A1A2E' }}
+            >
+              <X size={15} />
             </button>
           </div>
 
+          {/* Tab switcher (pill style) */}
           {!editActivity && (
-            <div className="flex border-b border-gray-100 flex-shrink-0">
-              <button
-                onClick={() => setTab('library')}
-                className={cn(
-                  'flex-1 py-2.5 text-sm font-medium transition-colors',
-                  tab === 'library' ? 'text-azure-600 border-b-2 border-azure-500' : 'text-gray-500'
-                )}
-              >
-                Bibliothèque
-              </button>
-              <button
-                onClick={() => setTab('custom')}
-                className={cn(
-                  'flex-1 py-2.5 text-sm font-medium transition-colors',
-                  tab === 'custom' ? 'text-azure-600 border-b-2 border-azure-500' : 'text-gray-500'
-                )}
-              >
-                Créer
-              </button>
+            <div className="flex gap-2 px-4 py-3 flex-shrink-0">
+              {(['library', 'custom'] as const).map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className="flex-1 py-2 text-sm font-semibold rounded-full transition-all"
+                  style={tab === t
+                    ? { background: '#0077B6', color: '#fff' }
+                    : { background: 'transparent', color: 'rgba(26,26,46,0.5)' }
+                  }
+                >
+                  {t === 'library' ? 'Bibliothèque' : 'Créer'}
+                </button>
+              ))}
             </div>
           )}
 
           <div className="flex-1 overflow-y-auto">
+            {/* Library tab */}
             {tab === 'library' && (
               <div>
-                <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar">
+                <div className="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar">
                   {CATEGORY_FILTERS.map(f => (
                     <button
                       key={f.key}
                       onClick={() => setCategoryFilter(f.key)}
-                      className={cn(
-                        'flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-                        categoryFilter === f.key
-                          ? 'bg-azure-500 text-white'
-                          : 'bg-gray-100 text-gray-600'
-                      )}
+                      className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                      style={categoryFilter === f.key
+                        ? { background: '#0077B6', color: '#fff' }
+                        : { background: '#F0F4F8', color: 'rgba(26,26,46,0.6)' }
+                      }
                     >
                       {f.label}
                     </button>
                   ))}
                   <button
                     onClick={() => setBabyFilter(!babyFilter)}
-                    className={cn(
-                      'flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-                      babyFilter ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-600'
-                    )}
+                    className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                    style={babyFilter
+                      ? { background: '#F4D03F', color: '#1A1A2E' }
+                      : { background: '#F0F4F8', color: 'rgba(26,26,46,0.6)' }
+                    }
                   >
                     🍼 Bébé
                   </button>
                 </div>
 
-                <div className="px-4 pb-4 space-y-3">
+                <div className="px-4 pb-6 space-y-2">
                   {filteredLibrary.length === 0 ? (
-                    <p className="text-center text-gray-400 py-8">Aucune activité pour ce filtre</p>
+                    <p className="text-center py-8 text-sm" style={{ color: 'rgba(26,26,46,0.4)' }}>Aucune activité pour ce filtre</p>
                   ) : (
-                    filteredLibrary.map(template => (
-                      <div key={template.id} className="bg-sand-50 rounded-xl p-3 border border-sand-200">
-                        <div className="flex items-start gap-2 mb-2">
-                          <span className="text-xl">{template.emoji}</span>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-gray-900 text-sm">{template.title}</div>
-                            <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{template.description}</p>
-                          </div>
-                          {template.is_baby_friendly && <span className="text-sm">🍼</span>}
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap mb-2">
-                          {template.tags?.map(tag => (
-                            <span key={tag} className="text-xs bg-white text-gray-500 px-2 py-0.5 rounded-full border border-gray-200">{tag}</span>
-                          ))}
-                        </div>
-                        <button
-                          onClick={() => addFromLibrary(template)}
-                          className="w-full h-9 rounded-lg bg-azure-500 text-white text-sm font-medium flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+                    filteredLibrary.map(template => {
+                      const accent = CATEGORY_ACCENT[template.category] || '#90E0EF'
+                      return (
+                        <div
+                          key={template.id}
+                          className="rounded-xl p-3 flex items-start gap-3"
+                          style={{ background: '#F0F4F8' }}
                         >
-                          <Plus size={14} />
-                          Ajouter
-                        </button>
-                      </div>
-                    ))
+                          <div
+                            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                            style={{ background: '#FAF3E0' }}
+                          >
+                            {template.emoji}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-sm" style={{ color: '#1A1A2E' }}>{template.title}</p>
+                                <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'rgba(26,26,46,0.5)' }}>
+                                  {template.description}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => addFromLibrary(template)}
+                                className="flex-shrink-0 flex items-center gap-1 h-8 px-3 rounded-lg text-xs font-semibold transition-all active:scale-95"
+                                style={{ border: `1.5px solid ${accent}`, color: accent, background: 'white' }}
+                              >
+                                <Plus size={12} />
+                                Ajouter
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
                   )}
                 </div>
               </div>
             )}
 
+            {/* Custom tab */}
             {tab === 'custom' && (
               <div className="px-4 py-4 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Titre *</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Titre *</label>
                   <input
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="Ex : Plage des Sablettes"
-                    className="w-full h-11 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-azure-300"
+                    className="w-full h-12 px-4 rounded-xl text-sm outline-none transition-all"
+                    style={{ background: '#F0F4F8', color: '#1A1A2E', border: '2px solid transparent' }}
+                    onFocus={e => (e.target.style.borderColor = 'rgba(0,119,182,0.3)')}
+                    onBlur={e => (e.target.style.borderColor = 'transparent')}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Emoji</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Emoji</label>
                   <div className="flex gap-2 flex-wrap">
                     {EMOJI_PICKER.map(e => (
                       <button
                         key={e}
                         onClick={() => setEmoji(e)}
-                        className={cn(
-                          'w-10 h-10 rounded-xl text-lg flex items-center justify-center transition-all',
-                          emoji === e ? 'bg-azure-100 ring-2 ring-azure-400' : 'bg-gray-100'
-                        )}
+                        className="w-11 h-11 rounded-xl text-xl flex items-center justify-center transition-all active:scale-95"
+                        style={emoji === e
+                          ? { background: 'rgba(0,119,182,0.1)', outline: '2px solid #0077B6' }
+                          : { background: '#F0F4F8' }
+                        }
                       >
                         {e}
                       </button>
@@ -261,11 +254,12 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Catégorie *</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Catégorie</label>
                   <select
                     value={category}
                     onChange={e => setCategory(e.target.value as Category)}
-                    className="w-full h-11 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-azure-300"
+                    className="w-full h-12 px-4 rounded-xl text-sm outline-none appearance-none"
+                    style={{ background: '#F0F4F8', color: '#1A1A2E', border: 'none' }}
                   >
                     {CATEGORIES.map(c => (
                       <option key={c} value={c}>{CATEGORY_LABELS[c] || c}</option>
@@ -274,11 +268,12 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Créneau horaire</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Créneau horaire</label>
                   <select
                     value={timeSlot}
                     onChange={e => setTimeSlot(e.target.value)}
-                    className="w-full h-11 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-azure-300"
+                    className="w-full h-12 px-4 rounded-xl text-sm outline-none appearance-none"
+                    style={{ background: '#F0F4F8', color: '#1A1A2E', border: 'none' }}
                   >
                     <option value="">Non défini</option>
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
@@ -286,41 +281,41 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Durée estimée</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Durée</label>
                   <select
                     value={duration}
                     onChange={e => setDuration(Number(e.target.value))}
-                    className="w-full h-11 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-azure-300"
+                    className="w-full h-12 px-4 rounded-xl text-sm outline-none appearance-none"
+                    style={{ background: '#F0F4F8', color: '#1A1A2E', border: 'none' }}
                   >
                     {DURATIONS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Notes (optionnel)</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'rgba(26,26,46,0.5)' }}>Notes (optionnel)</label>
                   <textarea
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     placeholder="Infos pratiques, liens, remarques..."
                     rows={3}
-                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-azure-300 resize-none"
+                    className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                    style={{ background: '#F0F4F8', color: '#1A1A2E', border: 'none' }}
                   />
                 </div>
 
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-sm font-medium text-gray-700">Baby-friendly 🍼</span>
+                  <span className="text-sm font-medium" style={{ color: '#1A1A2E' }}>Baby-friendly 🍼</span>
                   <button
                     onClick={() => setIsBabyFriendly(!isBabyFriendly)}
-                    className={cn(
-                      'w-12 h-6 rounded-full transition-colors relative',
-                      isBabyFriendly ? 'bg-azure-500' : 'bg-gray-200'
-                    )}
+                    className="w-12 h-6 rounded-full transition-colors relative"
+                    style={{ background: isBabyFriendly ? '#0077B6' : '#E2E8F0' }}
                     aria-label={isBabyFriendly ? 'Baby-friendly activé' : 'Baby-friendly désactivé'}
                   >
-                    <div className={cn(
-                      'absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform',
-                      isBabyFriendly ? 'translate-x-6' : 'translate-x-0.5'
-                    )} />
+                    <div
+                      className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                      style={{ transform: isBabyFriendly ? 'translateX(1.5rem)' : 'translateX(0.125rem)' }}
+                    />
                   </button>
                 </div>
               </div>
@@ -328,16 +323,21 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
           </div>
 
           {tab === 'custom' && (
-            <div className="flex gap-3 px-4 py-4 border-t border-gray-100 flex-shrink-0 pb-safe">
+            <div
+              className="flex gap-3 px-4 py-4 flex-shrink-0"
+              style={{ borderTop: '1px solid rgba(0,119,182,0.08)', paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}
+            >
               <button
                 onClick={onClose}
-                className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-700 font-medium active:scale-95 transition-transform"
+                className="flex-1 h-12 rounded-xl text-sm font-semibold transition-all active:scale-95"
+                style={{ background: '#F0F4F8', color: '#1A1A2E' }}
               >
                 Annuler
               </button>
               <button
                 onClick={handleCustomSubmit}
-                className="flex-1 h-12 rounded-xl bg-azure-500 text-white font-medium active:scale-95 transition-transform"
+                className="flex-1 h-12 rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
+                style={{ background: '#0077B6' }}
               >
                 {editActivity ? 'Modifier ✓' : 'Ajouter ✓'}
               </button>

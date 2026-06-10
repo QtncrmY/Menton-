@@ -36,11 +36,11 @@ export const usePlanningStore = create<PlanningStore>((set, get) => ({
       if (activities) {
         activities.forEach(a => {
           if (!grouped[a.day_id]) grouped[a.day_id] = []
-          grouped[a.day_id].push(a as unknown as Activity)
+          grouped[a.day_id].push(a as Activity)
         })
       }
 
-      set({ days: (days as unknown as Day[]) || [], activities: grouped, isLoading: false })
+      set({ days: (days as Day[]) || [], activities: grouped, isLoading: false })
     } catch {
       set({ isLoading: false })
     }
@@ -80,7 +80,7 @@ export const usePlanningStore = create<PlanningStore>((set, get) => ({
         activities: {
           ...state.activities,
           [dayId]: state.activities[dayId].map(a =>
-            a.id === tempId ? (data as unknown as Activity) : a
+            a.id === tempId ? (data as Activity) : a
           ),
         },
       }))

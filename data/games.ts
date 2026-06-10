@@ -1,5 +1,58 @@
 import type { QuizQuestion, GameCard } from '@/types'
 
+export const WOULD_YOU_RATHER: { a: string; b: string }[] = [
+  { a: 'Vivre sur la Côte d\'Azur', b: 'Vivre à Paris' },
+  { a: 'Vacances plage chaque année', b: 'Un grand voyage différent chaque année' },
+  { a: 'Ne plus jamais boire de vin', b: 'Ne plus jamais manger de fromage' },
+  { a: 'Travailler 4 jours/semaine avec 20% de salaire en moins', b: 'Travailler 5 jours mais avec le double de salaire' },
+  { a: 'Avoir une villa avec piscine loin de tout', b: 'Un appartement en bord de mer en plein centre' },
+  { a: 'Toujours voyager en business class mais 2 fois moins souvent', b: 'Voyager en éco mais autant que tu veux' },
+  { a: 'Savoir ce que les gens pensent vraiment de toi', b: 'Ne jamais le savoir' },
+  { a: 'Être propriétaire d\'un voilier', b: 'Être propriétaire d\'un camping-car' },
+  { a: 'Manger la même chose chaque jour (mais c\'est délicieux)', b: 'Ne jamais manger le même plat deux fois' },
+  { a: 'Pouvoir parler toutes les langues du monde', b: 'Pouvoir te téléporter n\'importe où instantanément' },
+  { a: 'Revenir à tes 20 ans avec ton expérience actuelle', b: 'Avoir 40 ans mais savoir exactement comment ta vie se passera' },
+  { a: 'Ne plus jamais prendre l\'avion', b: 'Ne plus jamais prendre la voiture' },
+  { a: 'Dîner dans le meilleur restaurant du monde seul', b: 'Un kebab avec tes meilleurs amis' },
+  { a: 'Pouvoir voler', b: 'Être invisible' },
+  { a: 'Gagner 1M€ maintenant mais ne plus jamais partir en vacances', b: 'Partir en vacances 3 mois par an mais avec un salaire normal' },
+  { a: 'Passer une semaine seul sur une île paradisiaque', b: 'Une semaine dans une ville inconnue avec tes amis' },
+  { a: 'Tout savoir sur le futur mais ne rien pouvoir changer', b: 'Ne rien savoir et pouvoir tout changer' },
+  { a: 'Vivre dans un pays chaud toute l\'année', b: 'Avoir les 4 saisons' },
+  { a: 'Que tout le monde t\'aime mais sans te connaître vraiment', b: 'Que très peu de gens te connaissent vraiment mais t\'adorent' },
+  { a: 'Ne jamais te souvenir de tes rêves', b: 'Te souvenir de chaque rêve en détail' },
+  { a: 'Manger une pizza à Naples', b: 'Une socca à Nice' },
+  { a: 'Un week-end à Monaco avec budget illimité', b: 'Une semaine à Menton avec budget normal' },
+  { a: 'Être chef cuisinier étoilé', b: 'Être propriétaire d\'un hôtel 5 étoiles sur la Côte d\'Azur' },
+  { a: 'Pouvoir arrêter le temps quand tu veux', b: 'Pouvoir recommencer n\'importe quelle journée de ta vie' },
+  { a: 'Avoir 10 amis très proches', b: 'Avoir 100 bonnes connaissances' },
+]
+
+export const MOST_LIKELY_QUESTIONS: string[] = [
+  'Qui serait le plus susceptible de se perdre dans une ville inconnue ?',
+  'Qui commande toujours le plat le plus cher au restaurant ?',
+  "Qui s'endort en premier le soir ?",
+  'Qui prendrait 10 valises pour un week-end ?',
+  "Qui est le plus à cheval sur l'heure des repas ?",
+  "Qui oublie toujours quelque chose dans la chambre d'hôtel ?",
+  'Qui prend le plus de photos pendant le voyage ?',
+  'Qui rentrerait avec le souvenir le plus ridicule ?',
+  'Qui se plaindrait le plus de la chaleur ?',
+  'Qui goûterait en premier un plat bizarre ?',
+  'Qui serait le dernier prêt le matin ?',
+  'Qui est le plus difficile quand il faut choisir un restaurant ?',
+  'Qui dormirait le plus longtemps en vacances ?',
+  'Qui ferait la plus grosse dépense impulsive ?',
+  'Qui parlerait le plus fort dans un musée ?',
+  'Qui flipperait le plus sur une route de montagne ?',
+  'Qui ferait le plus attention à son budget ?',
+  'Qui organise le mieux les sorties ?',
+  'Qui changerait le plus souvent d\'avis sur les plans de la journée ?',
+  'Qui est le plus susceptible de tomber amoureux de Menton et de vouloir y habiter ?',
+  'Qui finit toujours son assiette en premier ?',
+  'Qui serait le chef de groupe officiel en cas de désaccord ?',
+]
+
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'q1',

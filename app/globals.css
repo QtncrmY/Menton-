@@ -4,8 +4,17 @@
 
 @layer base {
   :root {
-    --font-display: 'Instrument Serif';
-    --font-body: 'DM Sans';
+    --color-sea:   #0077B6;
+    --color-sky:   #90E0EF;
+    --color-sun:   #F4D03F;
+    --color-sand:  #FAF3E0;
+    --color-dusk:  #1A1A2E;
+    --color-coral: #E76F51;
+    --color-mist:  #F0F4F8;
+
+    --font-display: 'Cormorant Garamond';
+    --font-body:    'Plus Jakarta Sans';
+    --font-mono:    'JetBrains Mono';
   }
 
   * {
@@ -17,7 +26,12 @@
   }
 
   body {
+    font-family: var(--font-body), system-ui, sans-serif;
+    background: var(--color-sand);
+    color: var(--color-dusk);
     overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -34,8 +48,8 @@
     font-family: var(--font-display), Georgia, serif;
   }
 
-  .font-body {
-    font-family: var(--font-body), system-ui, sans-serif;
+  .font-mono {
+    font-family: var(--font-mono), monospace;
   }
 
   .line-clamp-2 {
@@ -50,5 +64,51 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  .touch-feedback {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .touch-feedback:active {
+    opacity: 0.7;
+    transition: opacity 100ms;
+  }
+
+  /* Scroll snap for day tabs */
+  .snap-x-mandatory {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .snap-center {
+    scroll-snap-align: center;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Wave animation */
+@keyframes wave-drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.wave-animate {
+  animation: wave-drift 20s linear infinite;
+  width: 200%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-animate {
+    animation: none;
   }
 }

@@ -12,28 +12,27 @@ export function CountdownCard() {
   const isOnVoyage = daysUntil <= 0 && daysUntilEnd >= 0
   const isAfter = daysUntilEnd < 0
 
-  let gradient = 'from-azure-600 to-azure-400'
+  let bg = 'linear-gradient(135deg, #0077B6 0%, #0096C7 100%)'
   let emoji = '✈️'
-  let label = ''
-  let number = 0
-  let sublabel = ''
+  let topLabel = 'Départ dans'
+  let number = daysUntil
+  let bottomLabel = `jour${daysUntil > 1 ? 's' : ''}`
+  let sublabel = 'Sam 27 juin 2026'
 
   if (isAfter) {
-    gradient = 'from-purple-600 to-purple-400'
+    bg = 'linear-gradient(135deg, #7B2D8B 0%, #9B59B6 100%)'
     emoji = '💭'
-    label = 'Un souvenir inoubliable'
+    topLabel = ''
+    bottomLabel = ''
     sublabel = 'Menton 2026 — 27 juin au 4 juillet'
   } else if (isOnVoyage) {
-    gradient = 'from-emerald-600 to-emerald-400'
+    bg = 'linear-gradient(135deg, #2D8B4A 0%, #27AE60 100%)'
     emoji = '🌊'
     const dayNumber = Math.abs(daysUntil) + 1
     number = dayNumber
-    label = `Jour ${dayNumber} du voyage`
+    topLabel = ''
+    bottomLabel = `Jour ${dayNumber} du voyage`
     sublabel = 'On est à Menton ! 🎉'
-  } else {
-    number = daysUntil
-    label = `jour${daysUntil > 1 ? 's' : ''} avant le départ`
-    sublabel = '📅 Samedi 27 juin 2026'
   }
 
   return (
@@ -41,22 +40,40 @@ export function CountdownCard() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 text-white shadow-lg`}
+      className="rounded-card overflow-hidden relative"
+      style={{ background: bg, boxShadow: '0 4px 20px rgba(0,119,182,0.25)' }}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          {isAfter ? (
-            <div className="font-display text-2xl">{label}</div>
-          ) : (
-            <>
-              <div className="text-sm font-medium text-white/80 mb-1">{emoji} {isOnVoyage ? '' : 'Départ dans'}</div>
-              <div className="font-display text-6xl font-normal leading-none">{number}</div>
-              <div className="text-lg font-medium mt-1">{label}</div>
-            </>
-          )}
-          <div className="text-sm text-white/70 mt-2">{sublabel}</div>
+      <div className="p-5">
+        <div className="flex items-start justify-between">
+          <div>
+            {isAfter ? (
+              <p className="font-display text-2xl italic font-semibold text-white">Un souvenir inoubliable</p>
+            ) : (
+              <>
+                {topLabel && (
+                  <p className="text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">{emoji} {topLabel}</p>
+                )}
+                <motion.p
+                  className="font-display leading-none text-white"
+                  style={{ fontSize: '4rem', fontWeight: 600 }}
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  {number}
+                </motion.p>
+                <p className="text-lg font-semibold text-white mt-1">{bottomLabel}</p>
+              </>
+            )}
+            <p className="text-sm text-white/60 mt-2">{sublabel}</p>
+          </div>
+          <div className="text-5xl opacity-20">{emoji}</div>
         </div>
-        <div className="text-5xl opacity-80">{emoji}</div>
+      </div>
+      {/* Wave decoration */}
+      <div className="absolute bottom-0 left-0 right-0 overflow-hidden" style={{ height: '24px', opacity: 0.15 }}>
+        <svg viewBox="0 0 400 24" preserveAspectRatio="none" className="w-full h-full">
+          <path d="M0,12 C100,20 200,4 300,12 C350,16 375,8 400,12 L400,24 L0,24 Z" fill="white" />
+        </svg>
       </div>
     </motion.div>
   )

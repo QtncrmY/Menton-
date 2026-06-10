@@ -1,25 +1,30 @@
-import { PageHeader } from '@/components/layout/PageHeader'
+import { WaveBackground } from '@/components/WaveBackground'
 
 function Section({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-50 flex items-center gap-2">
+    <div className="bg-white rounded-card overflow-hidden" style={{ boxShadow: '0 2px 8px rgba(0,119,182,0.08)' }}>
+      <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: '1px solid rgba(0,119,182,0.06)' }}>
         <span className="text-xl">{icon}</span>
-        <h3 className="font-semibold text-gray-900">{title}</h3>
+        <h3 className="font-semibold" style={{ color: '#1A1A2E' }}>{title}</h3>
       </div>
-      <div className="p-4 space-y-2 text-sm text-gray-700">{children}</div>
+      <div className="p-4 space-y-2 text-sm" style={{ color: 'rgba(26,26,46,0.7)' }}>{children}</div>
     </div>
   )
 }
 
 function InfoRow({ label, value, badge }: { label: string; value: string; badge?: string }) {
   return (
-    <div className="flex items-start justify-between gap-2 py-1.5 border-b border-gray-50 last:border-0">
-      <span className="text-gray-500 flex-shrink-0">{label}</span>
+    <div className="flex items-start justify-between gap-2 py-1.5" style={{ borderBottom: '1px solid rgba(0,119,182,0.05)' }}>
+      <span className="flex-shrink-0" style={{ color: 'rgba(26,26,46,0.5)' }}>{label}</span>
       <div className="flex items-center gap-2 text-right">
-        <span className="font-medium text-gray-900">{value}</span>
+        <span className="font-semibold" style={{ color: '#1A1A2E' }}>{value}</span>
         {badge && (
-          <span className="text-xs bg-azure-100 text-azure-700 px-1.5 py-0.5 rounded-full flex-shrink-0">{badge}</span>
+          <span
+            className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0"
+            style={{ background: 'rgba(0,119,182,0.08)', color: '#0077B6' }}
+          >
+            {badge}
+          </span>
         )}
       </div>
     </div>
@@ -29,9 +34,18 @@ function InfoRow({ label, value, badge }: { label: string; value: string; badge?
 export default function InfoPage() {
   return (
     <div>
-      <PageHeader title="ℹ️ Infos pratiques" subtitle="Tout ce qu'il faut savoir" />
+      <header
+        className="relative overflow-hidden px-4 py-4 sticky top-0 z-40"
+        style={{ background: 'linear-gradient(135deg, #0077B6 0%, #0096C7 100%)' }}
+      >
+        <WaveBackground />
+        <div className="relative">
+          <h1 className="font-display text-2xl font-semibold text-white">ℹ️ Infos pratiques</h1>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Tout ce qu'il faut savoir</p>
+        </div>
+      </header>
 
-      <div className="p-4 space-y-4">
+      <div className="p-4 pb-6 space-y-4">
 
         <Section icon="🚂" title="Transport">
           <InfoRow label="Menton → Monaco" value="20 min" badge="~1.60€" />
@@ -49,9 +63,9 @@ export default function InfoPage() {
               { label: 'Police', num: '17' },
               { label: 'Universel', num: '112' },
             ].map(e => (
-              <div key={e.num} className="flex items-center justify-between bg-red-50 rounded-xl px-3 py-2 border border-red-100">
-                <span className="text-xs text-gray-600">{e.label}</span>
-                <span className="font-bold text-red-600 text-xl">{e.num}</span>
+              <div key={e.num} className="flex items-center justify-between rounded-xl px-3 py-2" style={{ background: 'rgba(231,111,81,0.08)', border: '1px solid rgba(231,111,81,0.15)' }}>
+                <span className="text-xs" style={{ color: 'rgba(26,26,46,0.6)' }}>{e.label}</span>
+                <span className="font-bold text-xl" style={{ color: '#E76F51' }}>{e.num}</span>
               </div>
             ))}
           </div>
@@ -70,9 +84,9 @@ export default function InfoPage() {
               <div key={p} className="text-sm text-gray-700">{p}</div>
             ))}
           </div>
-          <div className="bg-yellow-50 rounded-xl p-3 border border-yellow-100">
-            <p className="text-xs text-yellow-800 font-medium">⚠️ Éviter 12h–16h (heures les plus chaudes)</p>
-            <p className="text-xs text-yellow-700 mt-1">Crème solaire indice 50+ obligatoire pour bébé</p>
+          <div className="rounded-xl p-3" style={{ background: 'rgba(244,211,63,0.12)', border: '1px solid rgba(244,211,63,0.3)' }}>
+            <p className="text-xs font-semibold" style={{ color: '#7a5c00' }}>⚠️ Éviter 12h–16h (heures les plus chaudes)</p>
+            <p className="text-xs mt-1" style={{ color: '#7a5c00' }}>Crème solaire indice 50+ obligatoire pour bébé</p>
           </div>
         </Section>
 

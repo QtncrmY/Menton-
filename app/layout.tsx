@@ -1,18 +1,28 @@
 import type { Metadata, Viewport } from 'next'
-import { Instrument_Serif, DM_Sans } from 'next/font/google'
+import { Cormorant_Garamond, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const instrumentSerif = Instrument_Serif({
-  weight: ['400'],
+const cormorantGaramond = Cormorant_Garamond({
+  weight: ['400', '600'],
   style: ['normal', 'italic'],
   subsets: ['latin'],
   variable: '--font-display',
+  display: 'swap',
 })
 
-const dmSans = DM_Sans({
+const plusJakartaSans = Plus_Jakarta_Sans({
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-body',
+  display: 'swap',
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  weight: ['400', '500'],
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -30,13 +40,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0284c7',
+  themeColor: '#0077B6',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body className={`${instrumentSerif.variable} ${dmSans.variable} font-body bg-sand-50 text-gray-900 antialiased`}>
+      <body className={`${cormorantGaramond.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable} antialiased`}>
         {children}
         <Toaster position="top-center" richColors />
       </body>
