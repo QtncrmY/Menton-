@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin } from 'lucide-react'
+import { MapPin, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { DayPickerSheet } from '@/components/planning/DayPickerSheet'
+import { AddActivityModal } from '@/components/planning/AddActivityModal'
 import { ACTIVITIES_LIBRARY, CATEGORY_STYLES } from '@/data/activities-library'
 import { usePlanningStore } from '@/store/planningStore'
 import type { ActivityTemplate } from '@/types'
@@ -27,6 +28,8 @@ export default function ActivitiesPage() {
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [babyFilter, setBabyFilter] = useState(false)
   const [addingTemplateId, setAddingTemplateId] = useState<string | null>(null)
+  const [showCustomModal, setShowCustomModal] = useState(false)
+  const [customDayId, setCustomDayId] = useState<string | null>(null)
   const { days, activities: planningActivities, addActivity, fetchAll } = usePlanningStore()
 
   useEffect(() => {
@@ -60,9 +63,10 @@ export default function ActivitiesPage() {
   }
 
   return (
-    <div>
-      <PageHeader title="🗺️ Activités" subtitle="Bibliothèque d'idées" />
+    <div className="pb-24">
+      <PageHeader title="🗺️ Activités" subtitle="Idées & bibliothèque" />
 
+      {/* Filters */}
       <div className="overflow-x-auto border-b border-gray-100 bg-white">
         <div className="flex px-4 py-2.5 gap-2 min-w-max">
           {FILTERS.map(f => (
@@ -89,11 +93,28 @@ export default function ActivitiesPage() {
         </div>
       </div>
 
-      <div className="mx-4 mt-4 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+      {/* "Créer une activité" prominent CTA */}
+      <div className="px-4 pt-4">
+        <button
+          onClick={() => setShowCustomModal(true)}
+          className="w-full flex items-center gap-3 bg-gradient-to-r from-azure-500 to-azure-600 text-white rounded-2xl px-4 py-3.5 shadow-sm active:scale-[0.98] transition-transform"
+        >
+          <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+            <Plus size={20} />
+          </div>
+          <div className="text-left">
+            <div className="font-semibold text-sm">Créer une activité personnalisée</div>
+            <div className="text-xs text-azure-100 mt-0.5">Ajoute ta propre idée au planning</div>
+          </div>
+        </button>
+      </div>
+
+      {/* Map */}
+      <div className="mx-4 mt-4 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
         <iframe
           src={MENTON_EMBED}
           width="100%"
-          height="200"
+          height="180"
           style={{ border: 0, display: 'block' }}
           allowFullScreen
           loading="lazy"
@@ -102,8 +123,9 @@ export default function ActivitiesPage() {
         />
       </div>
 
-      <div className="px-4 pt-4 pb-2">
-        <p className="text-sm font-medium text-gray-500">Activités ({filtered.length})</p>
+      <div className="px-4 pt-5 pb-2 flex items-center justify-between">
+        <p className="text-sm font-semibold text-gray-700">Bibliothèque d'idées</p>
+        <span className="text-xs text-gray-400">{filtered.length} activité{filtered.length !== 1 ? 's' : ''}</span>
       </div>
 
       <div className="px-4 pb-6 space-y-3">
@@ -116,12 +138,14 @@ export default function ActivitiesPage() {
           filtered.map(template => {
             const style = CATEGORY_STYLES[template.category] || CATEGORY_STYLES.libre
             return (
-              <div key={template.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+              <div key={template.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 active:scale-[0.99] transition-transform">
                 <div className="flex items-start gap-3 mb-3">
-                  <span className="text-2xl mt-0.5">{template.emoji}</span>
+                  <div className="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0 text-2xl">
+                    {template.emoji}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="font-semibold text-gray-900">{template.title}</span>
+                      <span className="font-semibold text-gray-900 text-sm">{template.title}</span>
                       <span className={cn('text-xs px-2 py-0.5 rounded-full', style.bg, style.text)}>
                         {style.icon}
                       </span>
@@ -129,7 +153,7 @@ export default function ActivitiesPage() {
                         <span className="text-xs bg-yellow-50 text-yellow-700 px-1.5 py-0.5 rounded-full">🍼</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 line-clamp-2">{template.description}</p>
+                    <p className="text-xs text-gray-500 line-clamp-2">{template.description}</p>
                     <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400 flex-wrap">
                       {template.location_name && (
                         <span className="flex items-center gap-1">
@@ -159,9 +183,10 @@ export default function ActivitiesPage() {
 
                 <button
                   onClick={() => setAddingTemplateId(template.id)}
-                  className="w-full h-10 rounded-xl bg-azure-500 text-white font-medium text-sm active:scale-95 transition-transform"
+                  className="w-full h-10 rounded-xl bg-azure-500 text-white font-medium text-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-1.5"
                 >
-                  ＋ Ajouter au planning
+                  <Plus size={15} />
+                  Ajouter au planning
                 </button>
               </div>
             )
@@ -169,6 +194,7 @@ export default function ActivitiesPage() {
         )}
       </div>
 
+      {/* Day picker for library templates */}
       {addingTemplateId && (
         <DayPickerSheet
           days={days}
@@ -178,6 +204,28 @@ export default function ActivitiesPage() {
             if (template) handleAddToPlanning(template, dayId)
           }}
           onClose={() => setAddingTemplateId(null)}
+        />
+      )}
+
+      {/* Day picker for custom activity - step 1 */}
+      {showCustomModal && !customDayId && (
+        <DayPickerSheet
+          days={days}
+          title="Pour quel jour ?"
+          onSelect={(dayId) => setCustomDayId(dayId)}
+          onClose={() => setShowCustomModal(false)}
+        />
+      )}
+
+      {/* Custom activity creation - step 2 */}
+      {showCustomModal && customDayId && (
+        <AddActivityModal
+          dayId={customDayId}
+          onAdd={(dayId, activity) => {
+            addActivity(dayId, activity)
+            toast.success('Activité ajoutée au planning ✓')
+          }}
+          onClose={() => { setShowCustomModal(false); setCustomDayId(null) }}
         />
       )}
     </div>

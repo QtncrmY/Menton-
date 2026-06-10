@@ -122,7 +122,7 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-end"
+        className="fixed inset-0 z-[100] flex items-end"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -130,12 +130,18 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
         <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
         <motion.div
-          className="relative w-full bg-white rounded-t-3xl max-h-[90vh] flex flex-col"
+          className="relative w-full bg-white rounded-t-3xl flex flex-col"
+          style={{ maxHeight: '92vh' }}
           initial={{ y: '100%' }}
           animate={{ y: 0, transition: { type: 'spring', damping: 30, stiffness: 300 } }}
           exit={{ y: '100%', transition: { duration: 0.2 } }}
         >
-          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
+          {/* Handle bar */}
+          <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+            <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          </div>
+
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-shrink-0">
             <h2 className="font-semibold text-gray-900">
               {editActivity ? 'Modifier l\'activité' : 'Ajouter une activité'}
             </h2>
@@ -328,7 +334,7 @@ export function AddActivityModal({ dayId, onAdd, onClose, editActivity, onUpdate
           </div>
 
           {tab === 'custom' && (
-            <div className="flex gap-3 px-4 py-4 border-t border-gray-100 flex-shrink-0 pb-safe">
+            <div className="flex gap-3 px-4 py-4 border-t border-gray-100 flex-shrink-0" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
               <button
                 onClick={onClose}
                 className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-700 font-medium active:scale-95 transition-transform"

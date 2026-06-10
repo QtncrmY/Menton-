@@ -16,9 +16,11 @@ export function TodayCard() {
   const currentDay = days.find(d => d.date === today) || days[0]
   const dayActivities = currentDay ? (activities[currentDay.id] || []) : []
 
-  if (isLoading || !currentDay) {
-    return <div className="h-32 bg-gray-200 rounded-2xl animate-pulse" />
+  if (isLoading) {
+    return <div className="h-32 bg-gray-100 rounded-2xl animate-pulse" />
   }
+
+  if (!currentDay) return null
 
   return (
     <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
