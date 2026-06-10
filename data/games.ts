@@ -1,5 +1,30 @@
 import type { QuizQuestion, GameCard } from '@/types'
 
+export const MOST_LIKELY_QUESTIONS: string[] = [
+  'Qui serait le plus susceptible de se perdre dans une ville inconnue ?',
+  'Qui commande toujours le plat le plus cher au restaurant ?',
+  "Qui s'endort en premier le soir ?",
+  'Qui prendrait 10 valises pour un week-end ?',
+  "Qui est le plus à cheval sur l'heure des repas ?",
+  "Qui oublie toujours quelque chose dans la chambre d'hôtel ?",
+  'Qui prend le plus de photos pendant le voyage ?',
+  'Qui rentrerait avec le souvenir le plus ridicule ?',
+  'Qui se plaindrait le plus de la chaleur ?',
+  'Qui goûterait en premier un plat bizarre ?',
+  'Qui serait le dernier prêt le matin ?',
+  'Qui est le plus difficile quand il faut choisir un restaurant ?',
+  'Qui dormirait le plus longtemps en vacances ?',
+  'Qui ferait la plus grosse dépense impulsive ?',
+  'Qui parlerait le plus fort dans un musée ?',
+  'Qui flipperait le plus sur une route de montagne ?',
+  'Qui ferait le plus attention à son budget ?',
+  'Qui organise le mieux les sorties ?',
+  'Qui changerait le plus souvent d\'avis sur les plans de la journée ?',
+  'Qui est le plus susceptible de tomber amoureux de Menton et de vouloir y habiter ?',
+  'Qui finit toujours son assiette en premier ?',
+  'Qui serait le chef de groupe officiel en cas de désaccord ?',
+]
+
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'q1',

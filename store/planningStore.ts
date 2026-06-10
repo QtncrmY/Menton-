@@ -202,7 +202,7 @@ export const usePlanningStore = create<PlanningStore>((set, get) => ({
       const activities = { ...state.activities }
 
       if (eventType === 'INSERT') {
-        const a = newRow as Activity
+        const a = newRow as unknown as Activity
         if (!activities[a.day_id]) activities[a.day_id] = []
         const exists = activities[a.day_id].some(x => x.id === a.id)
         if (!exists) {
@@ -210,7 +210,7 @@ export const usePlanningStore = create<PlanningStore>((set, get) => ({
           toast('Planning mis à jour par le groupe 🔄', { icon: '🔄' })
         }
       } else if (eventType === 'UPDATE') {
-        const a = newRow as Activity
+        const a = newRow as unknown as Activity
         Object.keys(activities).forEach(dayId => {
           activities[dayId] = activities[dayId].filter(x => x.id !== a.id)
         })
