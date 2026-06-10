@@ -85,7 +85,7 @@ export function TruthOrDare({ onBack }: TruthOrDareProps) {
       setDeck(prev => ({ ...prev, [type]: freshDeck }))
     } else {
       card = available[0]
-      setUsedIds(prev => new Set([...prev, card.id]))
+      setUsedIds(prev => new Set(Array.from(prev).concat(card.id)))
     }
     setCurrentCard(card)
     setPhase('card')
