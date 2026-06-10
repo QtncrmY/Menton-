@@ -6,8 +6,9 @@ import { QuizGame } from '@/components/games/QuizGame'
 import { MostLikelyTo } from '@/components/games/MostLikelyTo'
 import { TwoTruthsOneLie } from '@/components/games/TwoTruthsOneLie'
 import { BingoMenton } from '@/components/games/BingoMenton'
+import { WouldYouRather } from '@/components/games/WouldYouRather'
 
-type GameView = 'menu' | 'quiz' | 'mostlikely' | 'twotruths' | 'bingo'
+type GameView = 'menu' | 'quiz' | 'mostlikely' | 'twotruths' | 'bingo' | 'wouldyourather'
 
 const GAMES = [
   {
@@ -42,6 +43,14 @@ const GAMES = [
     tags: ['Tout le voyage', '4×4 grille', 'Persistant'],
     tagColors: ['bg-citron-100 text-citron-600', 'bg-azure-100 text-azure-700', 'bg-sand-200 text-sand-700'],
   },
+  {
+    id: 'wouldyourather' as GameView,
+    emoji: '🤔',
+    title: 'Tu préfères…',
+    description: '25 dilemmes à trancher en groupe. Chacun vote en secret, puis on révèle comment le groupe a voté !',
+    tags: ['4 joueurs', '25 questions', 'Vote secret'],
+    tagColors: ['bg-orange-100 text-orange-700', 'bg-azure-100 text-azure-700', 'bg-pink-100 text-pink-700'],
+  },
 ]
 
 export default function GamesPage() {
@@ -51,6 +60,7 @@ export default function GamesPage() {
   if (view === 'mostlikely') return <MostLikelyTo onBack={() => setView('menu')} />
   if (view === 'twotruths') return <TwoTruthsOneLie onBack={() => setView('menu')} />
   if (view === 'bingo') return <BingoMenton onBack={() => setView('menu')} />
+  if (view === 'wouldyourather') return <WouldYouRather onBack={() => setView('menu')} />
 
   return (
     <div className="pb-28">
