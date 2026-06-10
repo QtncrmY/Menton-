@@ -27,7 +27,7 @@ export function useRestaurants() {
   async function loadVotes() {
     setIsLoading(true)
     const { data } = await supabase.from('restaurant_votes').select('*')
-    setVotes((data as RestaurantVote[]) || [])
+    setVotes((data as unknown as RestaurantVote[]) || [])
     setIsLoading(false)
   }
 
