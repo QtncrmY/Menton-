@@ -87,7 +87,7 @@ export function CountdownCard() {
                 style={{ background: 'linear-gradient(135deg, #0077B6, #0096C7)', boxShadow: '0 4px 20px rgba(0,119,182,0.28)' }}
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
           ✈️ Départ dans
         </p>
 
