@@ -93,10 +93,10 @@ export function CountdownCard() {
 
         <div className="grid grid-cols-4 gap-2 mb-4">
           {stats.map(({ n, label }) => (
-            <div key={label} className="rounded-xl py-3 text-center"
-                 style={{ background: 'rgba(255,255,255,0.13)', backdropFilter: 'blur(4px)' }}>
+            <div key={label} className="rounded-xl flex flex-col items-center justify-center"
+                 style={{ background: 'rgba(255,255,255,0.13)', height: '64px' }}>
               <div className="font-display text-2xl font-semibold text-white leading-none tracking-tight">{n}</div>
-              <div className="text-[10px] text-white/55 mt-1 font-medium uppercase tracking-wider">{label}</div>
+              <div className="text-[10px] text-white/55 mt-1 font-medium uppercase tracking-wider whitespace-nowrap">{label}</div>
             </div>
           ))}
         </div>
