@@ -10,7 +10,7 @@ export default function HomePage() {
     <div>
       {/* Hero */}
       <div
-        className="relative overflow-hidden px-5 pt-8 pb-0"
+        className="relative overflow-hidden px-5 pt-8 pb-2"
         style={{ background: 'linear-gradient(160deg, #0077B6 0%, #0096C7 60%, #00B4D8 100%)' }}
       >
         <WaveBackground />
@@ -38,7 +38,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="px-4 pt-4 pb-6 space-y-4">
+      <div className="px-4 pt-2 pb-6 space-y-4">
         <CountdownCard />
         <TodayCard />
         <GroupCard />
