@@ -76,10 +76,10 @@ export function CountdownCard() {
   const progress = Math.min(100, Math.max(0, ((Date.now() - planStart) / (departure - planStart)) * 100))
 
   const stats = [
-    { n: pad(days), label: 'jours' },
-    { n: pad(hours), label: 'heures' },
+    { n: pad(days), label: 'j' },
+    { n: pad(hours), label: 'h' },
     { n: pad(mins), label: 'min' },
-    { n: pad(secs), label: 'sec' },
+    { n: pad(secs), label: 's' },
   ]
 
   return (
