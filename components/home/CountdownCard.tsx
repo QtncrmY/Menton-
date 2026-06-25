@@ -91,9 +91,9 @@ export function CountdownCard() {
           ✈️ Départ dans
         </p>
 
-        <div className="grid grid-cols-4 gap-2 mb-4">
+        <div className="flex gap-2 mb-4">
           {stats.map(({ n, label }) => (
-            <div key={label} className="rounded-xl flex flex-col items-center justify-center"
+            <div key={label} className="flex-1 rounded-xl flex flex-col items-center justify-center"
                  style={{ background: 'rgba(255,255,255,0.13)', height: '64px' }}>
               <div className="font-display text-2xl font-semibold text-white leading-none tracking-tight">{n}</div>
               <div className="text-[10px] text-white/55 mt-1 font-medium uppercase tracking-wider whitespace-nowrap">{label}</div>
