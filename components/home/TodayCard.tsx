@@ -58,6 +58,12 @@ export function TodayCard() {
               {currentDay.label}
             </p>
           </div>
+          <span
+            className="text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full"
+            style={{ background: 'rgba(0,119,182,0.08)', color: '#0077B6' }}
+          >
+            {dayActivities.length} activité{dayActivities.length !== 1 ? 's' : ''}
+          </span>
         </div>
         <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(244,211,63,0.18)', color: '#7a5c00' }}>
